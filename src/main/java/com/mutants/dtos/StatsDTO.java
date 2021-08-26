@@ -15,7 +15,7 @@ public class StatsDTO {
     public double getRatio() {
         DecimalFormat df2 = new DecimalFormat("#.#");
         if(count_human_dna != 0) {
-            return Double.parseDouble(df2.format(count_mutant_dna / count_human_dna).replace(",","."));
+                return Double.parseDouble(df2.format(count_mutant_dna / count_human_dna).replace(",","."));
         }
         return 1.0;
     }
