@@ -1,22 +1,19 @@
 package com.mutants.services;
 
+import java.util.List;
+import org.junit.Test;
+import java.util.Arrays;
+import org.mockito.Mock;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import com.mutants.dtos.StatsDTO;
 import com.mutants.entities.Adn;
 import com.mutants.exceptions.MutantException;
 import com.mutants.repositories.IMutantRepository;
-import lombok.SneakyThrows;
-import org.junit.Test;
-import org.junit.internal.runners.statements.ExpectException;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import java.util.Arrays;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
