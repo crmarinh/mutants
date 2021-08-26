@@ -1,7 +1,7 @@
 package com.mutants.controllers;
 
 import com.mutants.dtos.AdnDTO;
-import com.mutants.dtos.Stats;
+import com.mutants.dtos.StatsDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import com.mutants.services.IMutantsServices;
@@ -21,7 +21,7 @@ public class MutantsController {
     }
 
     @GetMapping(value="/stats")
-    public Stats getStats() {
+    public StatsDTO getStats() {
         return mutantsServices.stats();
     }
 }

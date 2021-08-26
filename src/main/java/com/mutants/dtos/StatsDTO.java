@@ -9,7 +9,7 @@ import java.text.DecimalFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Stats {
+public class StatsDTO {
     private double count_mutant_dna;
     private double count_human_dna;
     public double getRatio() {

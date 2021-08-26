@@ -1,13 +1,16 @@
 package com.mutants.services;
 
-import com.mutants.dtos.Stats;
+import com.mutants.dtos.StatsDTO;
 import com.mutants.entities.Adn;
 import com.mutants.exceptions.MutantException;
 import com.mutants.repositories.IMutantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -39,11 +42,11 @@ public class MutantsServicesImpl implements IMutantsServices {
     }
 
     @Override
-    public Stats stats() {
+    public StatsDTO stats() {
         var allBeings = mutantRepository.findAll();
-        var numberOfHumans =  allBeings.stream().filter(adn -> adn.isHuman()).collect(Collectors.toList()).size();
+        var numberOfHumans =  allBeings.stream().filter(Adn::isHuman).collect(Collectors.toList()).size();
         var numberOfMutants = allBeings.size() - numberOfHumans;
-        return new Stats(numberOfMutants, numberOfHumans);
+        return new StatsDTO(numberOfMutants, numberOfHumans);
     }
 
     private Boolean horizontalSearch(List<String> adn) {
@@ -82,7 +85,7 @@ public class MutantsServicesImpl implements IMutantsServices {
 
         return this.rangeToString(matrix.size())
                 .sorted(Collections.reverseOrder())
-                .reduce("", (acc, next) -> this.joinAccumulatedValues(acc,next,inverted));
+                .reduce("", (acc, next) -> this.getDiagonal(acc,next,inverted));
     }
 
     private Stream<String> rangeToString(Integer endExclusive) {
@@ -90,7 +93,7 @@ public class MutantsServicesImpl implements IMutantsServices {
                 .mapToObj(String::valueOf);
     }
 
-    private String joinAccumulatedValues(String acc, String next, List<String> matrix) {
+    private String getDiagonal(String acc, String next, List<String> matrix) {
         var index = Integer.parseInt(next);
         return acc.concat(String.valueOf(matrix.get(index).charAt(index)));
     }
