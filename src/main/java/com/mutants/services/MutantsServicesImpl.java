@@ -29,7 +29,7 @@ public class MutantsServicesImpl implements IMutantsServices {
         var adnFound = mutantRepository.findByAdnSec(sequence);
 
         if(adnFound.isEmpty()) {
-            if(horizontalSearch(adn) || horizontalSearch(convertToTranspose(adn)) || horizontalSearch(getMajorDiagonals(adn))){
+            if(this.mutantSearch(adn)){
                 mutantRepository.save(new Adn(sequence, false));
                 throw new MutantException();
             }
@@ -37,6 +37,25 @@ public class MutantsServicesImpl implements IMutantsServices {
         } else {
             if(!adnFound.get(0).isHuman()) {
                 throw new MutantException();
+            }
+        }
+    }
+
+    private boolean mutantSearch(List<String> adn) {
+        Integer acc = horizontalSearch(adn).size();
+        if(acc > 1) {
+            return true;
+        } else {
+            acc += horizontalSearch(convertToTranspose(adn)).size();
+            if(acc > 1) {
+                return true;
+            } else {
+                acc += horizontalSearch(getMajorDiagonals(adn)).size();
+                if(acc > 1) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }
@@ -49,12 +68,11 @@ public class MutantsServicesImpl implements IMutantsServices {
         return new StatsDTO(numberOfMutants, numberOfHumans);
     }
 
-    private Boolean horizontalSearch(List<String> adn) {
-        List<String> mutants = base.stream()
+    private List<String> horizontalSearch(List<String> adn) {
+        return base.stream()
                 .filter(b -> adn.stream()
                         .anyMatch(i -> i.contains(b)))
                 .collect(Collectors.toList());
-        return !mutants.isEmpty();
     }
 
 

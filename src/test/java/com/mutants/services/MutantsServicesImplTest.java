@@ -1,21 +1,20 @@
 package com.mutants.services;
 
 import java.util.List;
-import org.junit.Test;
 import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import com.mutants.dtos.StatsDTO;
 import com.mutants.entities.Adn;
 import com.mutants.exceptions.MutantException;
 import com.mutants.repositories.IMutantRepository;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MutantsServicesImplTest {
 
@@ -28,11 +27,14 @@ public class MutantsServicesImplTest {
     @Mock
     private IMutantRepository iMutantRepository;
 
-    @Test(expected = MutantException.class)
+    @Test
     public void shouldReturnThatItIsMutantWithADNPersist() {
         String sequence = String.join("-", mutant);
         when(iMutantRepository.findByAdnSec(sequence)).thenReturn(List.of(new Adn(sequence, false)));
-        mutantsServices.isMutant(mutant);
+        assertThrows(
+                MutantException.class,
+                () -> mutantsServices.isMutant(mutant),
+                "Expected isMutant() to throw, but it didn't");
     }
 
     @Test
@@ -42,11 +44,9 @@ public class MutantsServicesImplTest {
         mutantsServices.isMutant(human);
     }
 
-    @Test(expected = MutantException.class)
+    @Test
     public void shouldReturnThatItIsMutant() {
-        String sequence = String.join("-", mutant);
-        when(iMutantRepository.findByAdnSec(sequence)).thenReturn(List.of());
-        mutantsServices.isMutant(mutant);
+        this.mutantTest(mutant);
     }
 
     @Test
@@ -57,4 +57,26 @@ public class MutantsServicesImplTest {
         assertEquals(stats.getCount_mutant_dna(), 0);
         assertEquals(stats.getRatio(), 1.0);
     }
+
+    @Test
+    public void mutantWithTwoHorizontalSequences() {
+        List<String> mutantTwoRow = Arrays.asList("GTGCTA","CAGTGC","TGAAGT","AGTGGG","CGCCCC","TCAAAA");
+        this.mutantTest(mutantTwoRow);
+    }
+
+    @Test
+    public void mutantWithTwoDiagonalsSequences() {
+        List<String> mutantTwoDiagonal = Arrays.asList("ATGCTG","CAGTGC","TGAGGT","AGGAGG","CGCCTA","TCACAT");
+        this.mutantTest(mutantTwoDiagonal);
+    }
+
+    private void mutantTest(List<String> adn) {
+        String sequence = String.join("-", adn);
+        when(iMutantRepository.findByAdnSec(sequence)).thenReturn(List.of());
+        assertThrows(
+                MutantException.class,
+                () -> mutantsServices.isMutant(adn),
+                "Expected isMutant() to throw, but it didn't");
+    }
+
 }
