@@ -65,7 +65,7 @@ Si quieres hacer la prueba con un:
 }
 ```
 
-## Usar API Human
+## Usar API Stats
 
 ### Use una herramienta que le permita el envio de peticiones HTTP Rest como Postmant o Insomnia
 ###### Request URL 
@@ -79,3 +79,29 @@ Tambien puede usar este servicio que se encuentra hosteado en **Amazon Web Servi
 POST -> http://ec2-3-21-230-136.us-east-2.compute.amazonaws.com/mutant
 GET -> http://ec2-3-21-230-136.us-east-2.compute.amazonaws.com/stats
 ```
+
+#Docker
+
+Puedes usar la imagen publica **cristian159/mutants** 
+https://hub.docker.com/repository/docker/cristian159/mutants
+
+Puedes usar el siguiente comando docker:
+```
+docker run -d -p 8080:8080 cristian159/mutants
+```
+Con esto se creara un contenedor con el aplicativo el cual se podra acceder por medio de docker host que puede ser la URL **http://localhost:8080**
+esto depende si tienes docker for windows para windows 10 pro o si tienes docker con virtuabox el cual te proveerá una URL diferente.
+
+
+### Crear imagen local
+ 
+Tambien puedes crear la imagen local.
+
+1. Construyes el proyecto, posicionado en la raiz del proyecto
+```
+gradle build
+``` 
+2. Ejecutas el Dockerfile
+```
+docker build -t <nombre de imagen> .
+``` 
