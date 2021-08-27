@@ -80,7 +80,7 @@ POST -> http://ec2-3-21-230-136.us-east-2.compute.amazonaws.com/mutant
 GET -> http://ec2-3-21-230-136.us-east-2.compute.amazonaws.com/stats
 ```
 
-#Docker
+# Docker
 
 Puedes usar la imagen publica **cristian159/mutants** 
 https://hub.docker.com/repository/docker/cristian159/mutants
