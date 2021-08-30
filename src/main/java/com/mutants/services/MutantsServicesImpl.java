@@ -29,7 +29,7 @@ public class MutantsServicesImpl implements IMutantsServices {
         var adnFound = mutantRepository.findByAdnSec(sequence);
 
         if(adnFound.isEmpty()) {
-            if(this.mutantSearch(adn)){
+            if(this.mutantSearch(0,adn,0)){
                 mutantRepository.save(new Adn(sequence, false));
                 throw new MutantException();
             }
@@ -41,22 +41,24 @@ public class MutantsServicesImpl implements IMutantsServices {
         }
     }
 
-    private boolean mutantSearch(List<String> adn) {
-        Integer acc = horizontalSearch(adn).size();
-        if(acc > 1) {
-            return true;
-        } else {
-            acc += horizontalSearch(convertToTranspose(adn)).size();
-            if(acc > 1) {
-                return true;
-            } else {
-                acc += horizontalSearch(getMajorDiagonals(adn)).size();
-                if(acc > 1) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+    private boolean mutantSearch(Integer acc, List<String> adn, Integer transformationNumber) {
+        if (transformationNumber < 0 || transformationNumber > 3) {
+            return false;
+        }
+        acc += this.getSizeList(adn, transformationNumber + 1);
+        return acc > 1 || mutantSearch(acc, adn, transformationNumber + 1);
+    }
+
+    private Integer getSizeList(List<String> adn,Integer transformationNumber) {
+        switch (transformationNumber) {
+            case 1:
+                return horizontalSearch(getMajorDiagonals(adn)).size();
+            case 2:
+                return horizontalSearch(adn).size();
+            case 3:
+                return horizontalSearch(convertToTranspose(adn)).size();
+            default:
+                return 0;
         }
     }
 
